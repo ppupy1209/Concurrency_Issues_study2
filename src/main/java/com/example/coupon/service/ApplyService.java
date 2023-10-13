@@ -1,6 +1,7 @@
 package com.example.coupon.service;
 
 import com.example.coupon.domain.Coupon;
+import com.example.coupon.producer.CouponCreateProducer;
 import com.example.coupon.repository.CouponCountRepository;
 import com.example.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,15 @@ public class ApplyService {
 
     private final CouponCountRepository couponCountRepository;
 
+    private final CouponCreateProducer couponCreateProducer;
+
     public void apply(Long userId) {
-        long count = couponRepository.count();
+        Long count = couponCountRepository.increment();
 
         if (count > 100) {
             return;
         }
 
-        couponRepository.save(new Coupon(userId));
+       couponCreateProducer.create(userId);
     }
 }
